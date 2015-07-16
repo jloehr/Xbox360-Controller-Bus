@@ -23,11 +23,6 @@ Environment:
 #include "queue.h"
 #include "trace.h"
 
-//
-// WDFDRIVER Events
-//
-
 DRIVER_INITIALIZE DriverEntry;
 EVT_WDF_DRIVER_DEVICE_ADD Xbox360ControllerBusEvtDeviceAdd;
-EVT_WDF_OBJECT_CONTEXT_CLEANUP Xbox360ControllerBusEvtDriverContextCleanup;
 
