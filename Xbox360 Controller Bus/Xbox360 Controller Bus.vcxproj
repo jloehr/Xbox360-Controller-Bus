@@ -52,12 +52,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Device.c" />
+    <ClCompile Include="DeviceList.c">
+      <PreprocessToFile Condition="'$(Configuration)|$(Platform)'=='Win8.1 Debug|x64'">false</PreprocessToFile>
+    </ClCompile>
     <ClCompile Include="Driver.c" />
     <ClCompile Include="Queue.c" />
     <ClCompile Include="Trace.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Device.h" />
+    <ClInclude Include="DeviceList.h" />
     <ClInclude Include="Driver.h" />
     <ClInclude Include="Public.h" />
     <ClInclude Include="Queue.h" />

@@ -19,9 +19,10 @@ Environment:
 #include <ntddk.h>
 #include <wdf.h>
 
-#include "device.h"
-#include "queue.h"
-#include "trace.h"
+#include "Device.h"
+#include "Queue.h"
+#include "Trace.h"
+#include "DeviceList.h"
 
 DRIVER_INITIALIZE DriverEntry;
 EVT_WDF_DRIVER_DEVICE_ADD Xbox360ControllerBusEvtDeviceAdd;
