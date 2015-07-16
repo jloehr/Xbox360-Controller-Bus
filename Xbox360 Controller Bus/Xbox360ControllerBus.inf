@@ -1,0 +1,91 @@
+;
+; Xbox360ControllerBus.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=Sample ; TODO: edit Class
+ClassGuid={78A1C341-4539-11d3-B88D-00C04FAD5171} ; TODO: edit ClassGuid
+Provider=%ManufacturerName%
+CatalogFile=Xbox360ControllerBus.cat
+DriverVer= ; TODO: set DriverVer in stampinf property pages
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+; ================= Class section =====================
+
+[ClassInstall32]
+Addreg=SampleClassReg
+
+[SampleClassReg]
+HKR,,,0,%ClassName%
+HKR,,Icon,,-5
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+Xbox360ControllerBus.sys  = 1,,
+
+;*****************************************
+; Install Section
+;*****************************************
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+%Xbox360ControllerBus.DeviceDesc%=Xbox360ControllerBus_Device, Root\Xbox360ControllerBus ; TODO: edit hw-id
+
+[Xbox360ControllerBus_Device.NT]
+CopyFiles=Drivers_Dir
+
+[Drivers_Dir]
+Xbox360ControllerBus.sys
+
+;-------------- Service installation
+[Xbox360ControllerBus_Device.NT.Services]
+AddService = Xbox360ControllerBus,%SPSVCINST_ASSOCSERVICE%, Xbox360ControllerBus_Service_Inst
+
+; -------------- Xbox360ControllerBus driver install sections
+[Xbox360ControllerBus_Service_Inst]
+DisplayName    = %Xbox360ControllerBus.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\Xbox360ControllerBus.sys
+LoadOrderGroup = Extended Base
+
+;
+;--- Xbox360ControllerBus_Device Coinstaller installation ------
+;
+
+[DestinationDirs]
+Xbox360ControllerBus_Device_CoInstaller_CopyFiles = 11
+
+[Xbox360ControllerBus_Device.NT.CoInstallers]
+AddReg=Xbox360ControllerBus_Device_CoInstaller_AddReg
+CopyFiles=Xbox360ControllerBus_Device_CoInstaller_CopyFiles
+
+[Xbox360ControllerBus_Device_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll,WdfCoInstaller"
+
+[Xbox360ControllerBus_Device_CoInstaller_CopyFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll
+
+[SourceDisksFiles]
+WdfCoInstaller$KMDFCOINSTALLERVERSION$.dll=1 ; make sure the number matches with SourceDisksNames
+
+[Xbox360ControllerBus_Device.NT.Wdf]
+KmdfService =  Xbox360ControllerBus, Xbox360ControllerBus_wdfsect
+[Xbox360ControllerBus_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE= 0x00000002
+ManufacturerName="" ; TODO: add ManufacturerName
+ClassName="Samples" ; TODO: edit ClassName
+DiskName = "Xbox360ControllerBus Installation Disk"
+Xbox360ControllerBus.DeviceDesc = "Xbox360ControllerBus Device"
+Xbox360ControllerBus.SVCDESC = "Xbox360ControllerBus Service"
