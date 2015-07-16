@@ -15,7 +15,6 @@ Environment:
 --*/
 
 #include "driver.h"
-#include "queue.tmh"
 
 #ifdef ALLOC_PRAGMA
 #pragma alloc_text (PAGE, Xbox360ControllerBusQueueInitialize)
@@ -74,7 +73,7 @@ Return Value:
                  );
 
     if( !NT_SUCCESS(status) ) {
-        TraceEvents(TRACE_LEVEL_ERROR, TRACE_QUEUE, "WdfIoQueueCreate failed %!STATUS!", status);
+        Trace("WdfIoQueueCreate failed %X", status);
         return status;
     }
 
@@ -114,9 +113,7 @@ Return Value:
 
 --*/
 {
-    TraceEvents(TRACE_LEVEL_INFORMATION, 
-                TRACE_QUEUE, 
-                "!FUNC! Queue 0x%p, Request 0x%p OutputBufferLength %d InputBufferLength %d IoControlCode %d", 
+    Trace("Queue 0x%p, Request 0x%p OutputBufferLength %d InputBufferLength %d IoControlCode %d", 
                 Queue, Request, (int) OutputBufferLength, (int) InputBufferLength, IoControlCode);
 
     WdfRequestComplete(Request, STATUS_SUCCESS);
@@ -153,9 +150,7 @@ Return Value:
 
 --*/
 {
-    TraceEvents(TRACE_LEVEL_INFORMATION, 
-                TRACE_QUEUE, 
-                "!FUNC! Queue 0x%p, Request 0x%p ActionFlags %d", 
+    Trace("Queue 0x%p, Request 0x%p ActionFlags %d", 
                 Queue, Request, ActionFlags);
 
     //

@@ -15,7 +15,6 @@ Environment:
 --*/
 
 #include "driver.h"
-#include "driver.tmh"
 
 #ifdef ALLOC_PRAGMA
 #pragma alloc_text (INIT, DriverEntry)
@@ -60,13 +59,6 @@ Return Value:
     WDF_OBJECT_ATTRIBUTES attributes;
 
     //
-    // Initialize WPP Tracing
-    //
-    WPP_INIT_TRACING( DriverObject, RegistryPath );
-
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
-
-    //
     // Register a cleanup callback so that we can call WPP_CLEANUP when
     // the framework driver object is deleted during driver unload.
     //
@@ -85,12 +77,9 @@ Return Value:
                              );
 
     if (!NT_SUCCESS(status)) {
-        TraceEvents(TRACE_LEVEL_ERROR, TRACE_DRIVER, "WdfDriverCreate failed %!STATUS!", status);
-        WPP_CLEANUP(DriverObject);
+		Trace("WdfDriverCreate failed %X", status);
         return status;
     }
-
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Exit");
 
     return status;
 }
@@ -125,11 +114,7 @@ Return Value:
 
     PAGED_CODE();
 
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
-
     status = Xbox360ControllerBusCreateDevice(DeviceInit);
-
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Exit");
 
     return status;
 }
@@ -156,12 +141,4 @@ Return Value:
     UNREFERENCED_PARAMETER(DriverObject);
 
     PAGED_CODE ();
-
-    TraceEvents(TRACE_LEVEL_INFORMATION, TRACE_DRIVER, "%!FUNC! Entry");
-
-    //
-    // Stop WPP Tracing
-    //
-    WPP_CLEANUP( WdfDriverWdmGetDriverObject(DriverObject) );
-
 }

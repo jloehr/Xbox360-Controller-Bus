@@ -84,7 +84,7 @@ KmdfLibraryVersion = $KMDFVERSION$
 
 [Strings]
 SPSVCINST_ASSOCSERVICE= 0x00000002
-ManufacturerName="" ; TODO: add ManufacturerName
+ManufacturerName="Julian Löhr" ; TODO: add ManufacturerName
 ClassName="Samples" ; TODO: edit ClassName
 DiskName = "Xbox360ControllerBus Installation Disk"
 Xbox360ControllerBus.DeviceDesc = "Xbox360ControllerBus Device"
