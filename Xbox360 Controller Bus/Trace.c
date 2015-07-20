@@ -37,7 +37,7 @@ _In_ PCCHAR  DebugMessage,
 
 		if (NT_SUCCESS(Status))
 		{
-			DbgPrint("Trace Wiimote: %s\n", DebugMessageBuffer);
+			DbgPrint("Xbox 360 Controller Bus: %s\n", DebugMessageBuffer);
 		}
 	}
 
