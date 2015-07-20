@@ -27,6 +27,8 @@ _In_ PWDFDEVICE_INIT ChildInit
 	NTSTATUS Status = STATUS_SUCCESS;
 	WDFDEVICE Child;
 	PMY_CHILD_IDENTIFICATION_DESCRIPTION IdentificationDescription;
+	WDF_DEVICE_PNP_CAPABILITIES PnPCapabilities;
+	WDF_DEVICE_POWER_CAPABILITIES PowerCapabilities;
 
 	DECLARE_CONST_UNICODE_STRING(HardwareID, L"X360CB\\VirtualController\0");
 	//DECLARE_CONST_UNICODE_STRING(DeviceID, L"XUSBBusTest\\Child\0");
@@ -86,6 +88,34 @@ _In_ PWDFDEVICE_INIT ChildInit
 	{
 		return Status;
 	}
+
+	//
+	// Set some properties for the child device.
+	//
+	WDF_DEVICE_PNP_CAPABILITIES_INIT(&PnPCapabilities);
+	PnPCapabilities.Removable = WdfTrue;
+	PnPCapabilities.EjectSupported = WdfTrue;
+	PnPCapabilities.SurpriseRemovalOK = WdfTrue;
+
+	PnPCapabilities.Address = IdentificationDescription->Id;
+	PnPCapabilities.UINumber = IdentificationDescription->Id;
+
+	WdfDeviceSetPnpCapabilities(Child, &PnPCapabilities);
+
+	WDF_DEVICE_POWER_CAPABILITIES_INIT(&PowerCapabilities);
+
+	PowerCapabilities.DeviceD1 = WdfTrue;
+	PowerCapabilities.WakeFromD1 = WdfTrue;
+	PowerCapabilities.DeviceWake = PowerDeviceD1;
+
+	PowerCapabilities.DeviceState[PowerSystemWorking] = PowerDeviceD1;
+	PowerCapabilities.DeviceState[PowerSystemSleeping1] = PowerDeviceD1;
+	PowerCapabilities.DeviceState[PowerSystemSleeping2] = PowerDeviceD2;
+	PowerCapabilities.DeviceState[PowerSystemSleeping3] = PowerDeviceD2;
+	PowerCapabilities.DeviceState[PowerSystemHibernate] = PowerDeviceD3;
+	PowerCapabilities.DeviceState[PowerSystemShutdown] = PowerDeviceD3;
+
+	WdfDeviceSetPowerCapabilities(Child, &PowerCapabilities);
 
 	return Status;
 }
