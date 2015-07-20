@@ -37,6 +37,8 @@ Xbox360ControllerBusQueueInitialize(
         );
 
 	QueueConfig.EvtIoDeviceControl = Xbox360ControllerBusEvtIoDeviceControl;
+	QueueConfig.EvtIoInternalDeviceControl = Xbox360ControllerBusEvtIoInternalDeviceControl;
+	QueueConfig.EvtIoDefault = Xbox360ControllerBusEvtIoDefault;
 
     Status = WdfIoQueueCreate(
                  Device,
@@ -63,10 +65,42 @@ Xbox360ControllerBusEvtIoDeviceControl(
     _In_ ULONG IoControlCode
     )
 {
-    Trace("Queue 0x%p, Request 0x%p OutputBufferLength %d InputBufferLength %d IoControlCode %d", 
+    Trace("Device Control: Queue 0x%p, Request 0x%p OutputBufferLength %d InputBufferLength %d IoControlCode %d", 
                 Queue, Request, (int) OutputBufferLength, (int) InputBufferLength, IoControlCode);
 
     WdfRequestComplete(Request, STATUS_SUCCESS);
 
     return;
+}
+
+VOID
+Xbox360ControllerBusEvtIoInternalDeviceControl(
+_In_ WDFQUEUE Queue,
+_In_ WDFREQUEST Request,
+_In_ size_t OutputBufferLength,
+_In_ size_t InputBufferLength,
+_In_ ULONG IoControlCode
+)
+{
+	Trace("Internal Device Control: Queue 0x%p, Request 0x%p OutputBufferLength %d InputBufferLength %d IoControlCode %d",
+		Queue, Request, (int)OutputBufferLength, (int)InputBufferLength, IoControlCode);
+
+	WdfRequestComplete(Request, STATUS_SUCCESS);
+
+	return;
+}
+
+VOID 
+Xbox360ControllerBusEvtIoDefault(
+_In_ WDFQUEUE   Queue,
+_In_ WDFREQUEST Request
+)
+{
+	Trace("Default Handler: Queue 0x%p, Request 0x%p",
+		Queue, Request);
+
+	WdfRequestComplete(Request, STATUS_SUCCESS);
+
+	return;
+
 }
