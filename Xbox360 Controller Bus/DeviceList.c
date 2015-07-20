@@ -20,22 +20,24 @@ Kernel-mode Driver Framework
 NTSTATUS
 EvtChildListCreateDevice(
 _In_ WDFCHILDLIST ChildList,
-_In_ PWDF_CHILD_IDENTIFICATION_DESCRIPTION_HEADER IdentificationDescription,
+_In_ PWDF_CHILD_IDENTIFICATION_DESCRIPTION_HEADER IdentificationDescriptionHeader,
 _In_ PWDFDEVICE_INIT ChildInit
 )
 {
 	NTSTATUS Status = STATUS_SUCCESS;
 	WDFDEVICE Child;
+	PMY_CHILD_IDENTIFICATION_DESCRIPTION IdentificationDescription;
 
-	DECLARE_CONST_UNICODE_STRING(HardwareID, L"XUSBBusTest\\Child\0");
+	DECLARE_CONST_UNICODE_STRING(HardwareID, L"X360CB\\VirtualController\0");
 	//DECLARE_CONST_UNICODE_STRING(DeviceID, L"XUSBBusTest\\Child\0");
-	DECLARE_CONST_UNICODE_STRING(CompatibleID, L"XUSBBusTest\\Child\\Compatible\0");
-	DECLARE_CONST_UNICODE_STRING(InstanceID, L"01\0");
-	DECLARE_CONST_UNICODE_STRING(DeviceLocationDescription, L"XUSBTest\0");
-	DECLARE_CONST_UNICODE_STRING(DeviceLocation, L"XUSBTestBus\0");
+	DECLARE_CONST_UNICODE_STRING(CompatibleID, L"USB\\MS_COMP_XUSB10\0"); 
+	DECLARE_UNICODE_STRING_SIZE(InstanceID, MAX_ID_LENGTH);
+	DECLARE_CONST_UNICODE_STRING(DeviceLocationDescription, L"Software Emulated XBox360 Controller\0");
+	DECLARE_CONST_UNICODE_STRING(DeviceLocation, L"VirutalXBox360ControllerBus\0");
 
 	UNREFERENCED_PARAMETER(ChildList);
-	UNREFERENCED_PARAMETER(IdentificationDescription);
+
+	IdentificationDescription = CONTAINING_RECORD(IdentificationDescriptionHeader, MY_CHILD_IDENTIFICATION_DESCRIPTION, Header);
 
 	WdfDeviceInitSetDeviceType(ChildInit, FILE_DEVICE_BUS_EXTENDER);
 
@@ -56,6 +58,12 @@ _In_ PWDFDEVICE_INIT ChildInit
 	{
 		return Status;
 	}
+	
+	Status = RtlUnicodeStringPrintf(&InstanceID, L"%02d", IdentificationDescription->Id);
+	if (!NT_SUCCESS(Status)) 
+	{
+	}
+
 
 	Status = WdfPdoInitAssignInstanceID(ChildInit, &InstanceID);
 	if (!NT_SUCCESS(Status))
@@ -78,7 +86,6 @@ _In_ PWDFDEVICE_INIT ChildInit
 	{
 		return Status;
 	}
-
 
 	return Status;
 }

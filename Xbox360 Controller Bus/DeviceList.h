@@ -13,6 +13,8 @@ Environment:
 Kernel-mode Driver Framework
 
 --*/
+#define MAX_ID_LENGTH 255
+
 typedef struct _MY_CHILD_IDENTIFICATION_DESCRIPTION
 {
 	WDF_CHILD_IDENTIFICATION_DESCRIPTION_HEADER Header;
